@@ -1,8 +1,8 @@
 from sqlalchemy.exc import IntegrityError
 import pytest
 
-from app import app
-from models import db, User, Recipe
+from server.app import app
+from server.models import db, User, Recipe
 
 class TestUser:
     '''User in models.py'''
@@ -86,11 +86,11 @@ class TestUser:
         '''has records with lists of recipes records attached.'''
 
         with app.app_context():
-
             User.query.delete()
             db.session.commit()
 
             user = User(username="Prabhdip")
+            user.password_hash = "testpassword"
 
             recipe_1 = Recipe(
                 title="Delicious Shed Ham",
@@ -103,7 +103,7 @@ class TestUser:
                     """ smallness northward situation few her certainty""" + \
                     """ something.""",
                 minutes_to_complete=60,
-                )
+            )
             recipe_2 = Recipe(
                 title="Hasty Party Ham",
                 instructions="""As am hastily invited settled at limited""" + \
@@ -113,7 +113,7 @@ class TestUser:
                              """ unpacked be advanced at. Confined in declared""" + \
                              """ marianne is vicinity.""",
                 minutes_to_complete=30,
-                )
+            )
 
             user.recipes.append(recipe_1)
             user.recipes.append(recipe_2)
